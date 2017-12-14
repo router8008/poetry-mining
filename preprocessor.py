@@ -92,9 +92,3 @@ def cut_poetry(filename, saved_location):
         with open(target_file_path, 'wb') as f:
             pickle.dump(result, f)
     return result
-
-
-if __name__ == '__main__':
-    saved_dir = os.curdir
-
-    cut_poetry("全唐诗.txt", saved_dir)
