@@ -38,19 +38,20 @@ def is_chinese(c):
     return '\u4e00' <= c <= '\u9fff'
 
 
-def cut_poetry(filename, saved_location):
+def cut_poetry(filename, saved_dir):
     """
     对全唐诗分词
     :param: filename: 全唐诗输入文件位置
             saved_location: 结果存储位置
     :return:分词结果
     """
-    target_file_path = os.path.join(saved_location, 'cut_result.pkl')
+    target_file_path = os.path.join(saved_dir, 'cut_result.pkl')
     if os.path.exists(target_file_path) and os.path.exists(target_file_path):
         print('load existed cut result.')
         with open(target_file_path, 'rb') as f:
             result = pickle.load(f)
     else:
+        print('begin cutting poetry...')
         result = CutResult()
         line_count = 0
         current_author = None

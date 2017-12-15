@@ -3,8 +3,9 @@ import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
+import pickle
 
-from preprocessor import CutResult, cut_poetry
+
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn import manifold
 
@@ -20,11 +21,21 @@ class Analyzer(object):
     """
     authors: 作者列表
     word_vector: 对应的词向量
+    word_vector_tsne: 降维后的词向量
     """
 
-    def __init__(self, cut_result):
-        self.authors, self.word_vector = self.author_word_vector(cut_result.author_poetry_dict)
-        self.word_vector_tsne = self.tsne()
+    def __init__(self, cut_result, saved_dir):
+        target_file_path = os.path.join(saved_dir, 'analyze_result.pkl')
+        if os.path.exists(target_file_path) and os.path.exists(target_file_path):
+            print('load analyzed result.')
+            # with open(target_file_path, 'rb') as f:
+            #     self.authors = pickle.load(f)
+        else:
+            print('begin analyzing cut result...')
+            self.authors, self.word_vector = self.author_word_vector(cut_result.author_poetry_dict)
+            # self.word_vector_tsne = self.tsne()
+            # with open(target_file_path, 'wb') as f:
+            #     pickle.dump(result, f)
 
     @staticmethod
     def author_word_vector(author_poetry_dict):
