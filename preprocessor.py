@@ -25,9 +25,7 @@ class CutResult(object):
         self.author_poetry_dict = OrderedDict()
 
     def add_cut_poetry(self, author, divided_lines):
-        """
-        为author_poetry_dict添加对象
-        """
+        """为author_poetry_dict添加对象"""
         ctp = self.author_poetry_dict.get(author)
         if ctp is None:
             self.author_poetry_dict[author] = ""
@@ -43,9 +41,9 @@ def is_chinese(c):
 def cut_poetry(filename, saved_location):
     """
     对全唐诗分词
-    :filename: 全唐诗输入文件位置
-    :saved_location: 结果存储位置
-    :return: CutResult
+    :param: filename: 全唐诗输入文件位置
+            saved_location: 结果存储位置
+    :return:分词结果
     """
     target_file_path = os.path.join(saved_location, 'cut_result.pkl')
     if os.path.exists(target_file_path) and os.path.exists(target_file_path):
@@ -59,36 +57,42 @@ def cut_poetry(filename, saved_location):
         divided_lines = []
         with open(filename, 'r', encoding='utf-8') as f:
             for line in f:
-                if line.strip() == "":
-                    continue
-                # 解析作者
-                if "【" in line:
-                    header = line.split()[1]
-                    author = header[header.find("】") + 1:].strip()
-                    result.author_counter[author] += 1
-                    # 将当前分词后的结果加入结果表中
-                    if current_author is not None:
-                        result.add_cut_poetry(current_author, divided_lines)
-                        divided_lines = []
-                    current_author = author
-                    continue
-                # 解析诗句
-                chars = [c for c in line if is_chinese(c)]
-                for char in chars:
-                    result.char_counter[char] += 1
-                cut_line = pseg.cut(line)
-                for word, property in cut_line:
-                    if not is_chinese(word):
-                        continue
-                    result.word_property_dict[word] = property
-                    result.word_set.add(word)
-                    result.word_counter[word] += 1
-                    divided_lines.append(word)
-                if line_count % 1000 == 0:
-                    print('%d lines processed.' % line_count)
                 line_count += 1
-                if line_count > 2000:
-                    break
+                if line_count % 5000 == 0:
+                    print('%d lines processed.' % line_count)
+                try:
+                    if line.strip() == "":
+                        continue
+                    # 解析作者
+                    if "【" in line:
+                        header = line.split()[1]
+                        author = header[header.find("】") + 1:].strip()
+                        result.author_counter[author] += 1
+                        # 将当前分词后的结果加入结果表中
+                        if current_author is not None:
+                            result.add_cut_poetry(current_author, divided_lines)
+                            divided_lines = []
+                        current_author = author
+                        continue
+                    # 解析诗句
+                    chars = [c for c in line if is_chinese(c)]
+                    for char in chars:
+                        result.char_counter[char] += 1
+                    cut_line = pseg.cut(line)
+                    for word, property in cut_line:
+                        if not is_chinese(word):
+                            continue
+                        result.word_property_dict[word] = property
+                        result.word_set.add(word)
+                        result.word_counter[word] += 1
+                        divided_lines.append(word)
+
+                    if line_count > 10000:
+                        break
+                except Exception as e:
+                    print(line_count, line)
+                    raise e
+
         with open(target_file_path, 'wb') as f:
             pickle.dump(result, f)
     return result
