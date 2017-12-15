@@ -5,7 +5,7 @@ from collections import Counter, OrderedDict
 from jieba import posseg as pseg
 
 
-class CuttedResult(object):
+class CutResult(object):
     """
     分词结果
     char_counter：字频统计
@@ -45,7 +45,7 @@ def cut_poetry(filename, saved_location):
     对全唐诗分词
     :filename: 全唐诗输入文件位置
     :saved_location: 结果存储位置
-    :return: CuttedResult
+    :return: CutResult
     """
     target_file_path = os.path.join(saved_location, 'cut_result.pkl')
     if os.path.exists(target_file_path) and os.path.exists(target_file_path):
@@ -53,7 +53,7 @@ def cut_poetry(filename, saved_location):
         with open(target_file_path, 'rb') as f:
             result = pickle.load(f)
     else:
-        result = CuttedResult()
+        result = CutResult()
         line_count = 0
         current_author = None
         divided_lines = []
