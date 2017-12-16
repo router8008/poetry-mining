@@ -13,7 +13,7 @@ class CutResult(object):
     word_set：词汇表
     word_counter：词汇计数
     word_property_dict：词汇词性
-    author_poetry_dict：分词后的结果
+    author_poetry_dict：解析后的结果，作者与他对应的诗
     """
 
     def __init__(self):
@@ -69,6 +69,7 @@ def cut_poetry(filename, saved_dir):
                         header = line.split()[1]
                         author = header[header.find("】") + 1:].strip()
                         result.author_counter[author] += 1
+                        divided_lines.append("\n")
                         # 将当前分词后的结果加入结果表中
                         if current_author is not None:
                             result.add_cut_poetry(current_author, divided_lines)
@@ -93,7 +94,8 @@ def cut_poetry(filename, saved_dir):
                 except Exception as e:
                     print(line_count, line)
                     raise e
-
+        # 加入最后一次解析的结果
+        result.add_cut_poetry(current_author, divided_lines)
         with open(target_file_path, 'wb') as f:
             pickle.dump(result, f)
     return result
