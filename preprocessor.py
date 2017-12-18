@@ -12,7 +12,7 @@ class CutResult(object):
     author_counter：作者计数
     word_set：词汇表
     word_counter：词汇计数
-    word_property_dict：词汇词性
+    word_property_counter_dict：词汇词性
     author_poetry_dict：解析后的结果，作者与他对应的诗
     """
 
@@ -21,7 +21,7 @@ class CutResult(object):
         self.author_counter = Counter()
         self.word_set = set()
         self.word_counter = Counter()
-        self.word_property_dict = {}
+        self.word_property_counter_dict = {}
         self.author_poetry_dict = OrderedDict()
 
     def add_cut_poetry(self, author, divided_lines):
@@ -34,7 +34,7 @@ class CutResult(object):
         self.author_poetry_dict[author] += ' '.join(divided_lines)
 
 
-def is_chinese(c):
+def _is_chinese(c):
     return '\u4e00' <= c <= '\u9fff'
 
 
@@ -77,14 +77,16 @@ def cut_poetry(filename, saved_dir):
                         current_author = author
                         continue
                     # 解析诗句
-                    chars = [c for c in line if is_chinese(c)]
+                    chars = [c for c in line if _is_chinese(c)]
                     for char in chars:
                         result.char_counter[char] += 1
                     cut_line = pseg.cut(line)
                     for word, property in cut_line:
-                        if not is_chinese(word):
+                        if not _is_chinese(word):
                             continue
-                        result.word_property_dict[word] = property
+                        if result.word_property_counter_dict.get(property) is None:
+                            result.word_property_counter_dict[property] = Counter()
+                        result.word_property_counter_dict[property][word] += 1
                         result.word_set.add(word)
                         result.word_counter[word] += 1
                         divided_lines.append(word)
@@ -92,7 +94,7 @@ def cut_poetry(filename, saved_dir):
                     if line_count > 10000:
                         break
                 except Exception as e:
-                    print(line_count, line)
+                    print("%d-解析全唐诗文件异常 %s" % (line_count, line))
                     raise e
         # 加入最后一次解析的结果
         result.add_cut_poetry(current_author, divided_lines)
