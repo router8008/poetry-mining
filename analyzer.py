@@ -8,6 +8,9 @@ from gensim.models.word2vec import LineSentence, Word2Vec
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn import manifold
 
+# from matplotlib.font_manager import FontProperties
+# font = FontProperties(fname=r"/usr/local/share/fonts/simhei.ttf", size=14)
+
 mpl.rcParams['font.sans-serif'] = ['AR PL UMing CN']  # 指定默认字体
 plt.rcParams['axes.unicode_minus'] = False  # 显示负号
 
