@@ -1,20 +1,14 @@
 # -*- coding: utf-8 -*-
 import multiprocessing
-import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-import pickle
 
 from gensim.models.word2vec import LineSentence, Word2Vec
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn import manifold
 
-from matplotlib.font_manager import FontProperties
-
-font = FontProperties(fname=r"/usr/local/share/fonts/simhei.ttf", size=14)
-
-# mpl.rcParams['font.sans-serif'] = ['AR PL UMing CN']  # 指定默认字体
+mpl.rcParams['font.sans-serif'] = ['AR PL UMing CN']  # 指定默认字体
 plt.rcParams['axes.unicode_minus'] = False  # 显示负号
 
 
@@ -32,23 +26,16 @@ class Analyzer(object):
     def __init__(self, cut_result, saved_dir):
         self.cut_result = cut_result
         self.authors = list(cut_result.author_poetry_dict.keys())
-        target_file_path = os.path.join(saved_dir, 'analyze_result.pkl')
-        if os.path.exists(target_file_path):
-            print('load analyzed result.')
-            with open(target_file_path, 'rb') as f:
-                self.authors, self.tfidf_word_vector, self.w2v_word_vector, \
-                self.tfidf_word_vector_tsne, self.w2v_word_vector_tsne = pickle.load(f)
-        else:
-            print('begin analyzing cut result...')
-            self.cut_result = cut_result
-            print("calculating poets' tf-idf word vector...")
-            self.tfidf_word_vector = self._author_word_vector(cut_result.author_poetry_dict)
-            print("calculating poets' w2v word vector...")
-            self.w2v_model, self.w2v_word_vector = self._word2vec(cut_result.author_poetry_dict)
-            print("use t-sne for dimensionality reduction...")
-            self.tfidf_word_vector_tsne = self._tsne(self.tfidf_word_vector)
-            self.w2v_word_vector_tsne = self._tsne(self.w2v_word_vector)
-            print("result saved.")
+        print('begin analyzing cut result...')
+        self.cut_result = cut_result
+        print("calculating poets' tf-idf word vector...")
+        self.tfidf_word_vector = self._author_word_vector(cut_result.author_poetry_dict)
+        print("calculating poets' w2v word vector...")
+        self.w2v_model, self.w2v_word_vector = self._word2vec(cut_result.author_poetry_dict)
+        print("use t-sne for dimensionality reduction...")
+        self.tfidf_word_vector_tsne = self._tsne(self.tfidf_word_vector)
+        self.w2v_word_vector_tsne = self._tsne(self.w2v_word_vector)
+        print("result saved.")
 
     @staticmethod
     def _author_word_vector(author_poetry_dict):
@@ -68,10 +55,6 @@ class Analyzer(object):
         poetry = list(author_poetry_dict.values())
         with open("cut_poetry", 'w') as f:
             f.write("\n".join(poetry))
-        # if os.path.exists(model_path):
-        #     print('load existed model.')
-        #     model = Word2Vec.load(model_path)
-        # else:
         model = Word2Vec(LineSentence("cut_poetry"), size=dimension, min_count=15,
                          workers=multiprocessing.cpu_count())
         word_vector = []
@@ -132,6 +115,5 @@ def plot_vectors(X, target):
         plt.text(X[i, 0], X[i, 1], target[i],
                  # color=plt.cm.Set1(y[i] / 10.),
                  fontdict={'weight': 'bold', 'size': 4}
-                 , fontproperties=font
                  )
     plt.show()
