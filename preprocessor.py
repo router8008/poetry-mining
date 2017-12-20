@@ -46,7 +46,9 @@ def cut_poetry(filename, saved_dir):
     :return:分词结果
     """
     target_file_path = os.path.join(saved_dir, 'cut_result.pkl')
-    if os.path.exists(target_file_path) and os.path.exists(target_file_path):
+    if not os.path.exists(saved_dir):
+        os.mkdir(saved_dir)
+    if os.path.exists(target_file_path):
         print('load existed cut result.')
         with open(target_file_path, 'rb') as f:
             result = pickle.load(f)
@@ -61,6 +63,8 @@ def cut_poetry(filename, saved_dir):
                 line_count += 1
                 if line_count % 5000 == 0:
                     print('%d lines processed.' % line_count)
+                # if line_count > 10000:
+                #     break
                 try:
                     if line.strip() == "":
                         continue
@@ -90,9 +94,6 @@ def cut_poetry(filename, saved_dir):
                         result.word_set.add(word)
                         result.word_counter[word] += 1
                         divided_lines.append(word)
-
-                    if line_count > 10000:
-                        break
                 except Exception as e:
                     print("%d-解析全唐诗文件异常 %s" % (line_count, line))
                     raise e
