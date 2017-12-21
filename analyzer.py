@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import multiprocessing
+import os
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -73,7 +74,7 @@ class Analyzer(object):
                 except KeyError:  # 有的词语不满足min_count则不会被记录在词表中
                     pass
             word_vector.append(np.array([v / count for v in vec]))
-
+        os.remove("cut_poetry")
         return model, word_vector
 
     @staticmethod
