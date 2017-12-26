@@ -190,8 +190,8 @@ python3 example.py
 关于t-SNE算法可以参考：[t-SNE聚类算法实践指南](https://yq.aliyun.com/articles/70733)，其中的代码实现可以参考sklearn的官方文档：[Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…](http://scikit-learn.org/stable/auto_examples/manifold/plot_lle_digits.html#sphx-glr-auto-examples-manifold-plot-lle-digits-py)
 
 
+---
 
 
-
-**欢迎对该样例进行补充和修改！**
+### 欢迎对该样例进行补充和修改！
 
