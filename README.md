@@ -132,6 +132,16 @@
 根据word2vector标准： 王绩
 ```
 
+对写诗数量前一百位的诗人的tf-idf词向量降维结果如下：
+![](https://github.com/router8008/poetry-mining/blob/master/images/tf_idf1.png)
+局部结果放大：
+![](https://github.com/router8008/poetry-mining/blob/master/images/tf_idf2.png)
+
+对写诗数量前一百位的诗人的word2vector词向量降维结果如下：
+![](https://github.com/router8008/poetry-mining/blob/master/images/w2v1.png)
+局部结果放大：
+![](https://github.com/router8008/poetry-mining/blob/master/images/w2v2.png)
+
 ## 运行样例
 
 #### 依赖环境
@@ -172,6 +182,7 @@ python3 example.py
 
   关于这个方法可以参考：[word2vec&doc2vec词向量模型](http://www.cnblogs.com/maybe2030/p/5427148.html)
 
+
 #### 数据降维
 
 为了便于显示，将计算结果降维，用到了t-SNE算法。
@@ -182,5 +193,5 @@ python3 example.py
 
 
 
-**<u>欢迎对该样例进行补充和修改！</u>**
+**欢迎对该样例进行补充和修改！**
 
